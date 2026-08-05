@@ -225,12 +225,31 @@ section{padding:clamp(72px,9vw,120px) 0;position:relative}
 .passo p{font-size:.9rem;color:#B9B8B4;line-height:1.55}
 
 /* galeria */
-.galeria{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:220px;gap:14px}
-.g{overflow:hidden;border-radius:var(--raio);background:#2A2B2D}
+.galeria{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:230px;gap:14px}
+.g{overflow:hidden;border-radius:var(--raio);background:#2A2B2D;padding:0;border:0;cursor:zoom-in;position:relative;display:block}
 .g img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.7,.3,1)}
 .g:hover img{transform:scale(1.05)}
+.g::after{content:"";position:absolute;inset:0;background:rgba(23,24,26,.18);opacity:0;transition:opacity .3s}
+.g:hover::after,.g:focus-visible::after{opacity:1}
+.g:focus-visible{outline:2px solid var(--lima);outline-offset:3px}
 .g:nth-child(1){grid-column:span 2;grid-row:span 2}
-.g:nth-child(6){grid-column:span 2}
+.galeria-nota{margin-top:22px;font-size:.9rem;color:#6E6F71}
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:200;background:rgba(12,13,14,.96);display:none;align-items:center;justify-content:center}
+.lb.on{display:flex}
+.lb-palco{position:relative;width:100%;height:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;touch-action:none}
+.lb-palco img{max-width:92vw;max-height:86vh;border-radius:8px;transform-origin:center center;transition:transform .18s ease;will-change:transform;user-select:none;-webkit-user-drag:none;cursor:zoom-in}
+.lb-palco.zoom img{cursor:grab}
+.lb-palco.zoom.arrastando img{cursor:grabbing;transition:none}
+.lb-topo{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:18px 20px;gap:16px;z-index:3}
+.lb-legenda{font-size:.88rem;color:#C8C7C3}
+.lb-btn{background:rgba(244,243,240,.1);border:1px solid rgba(244,243,240,.22);color:#F4F3F0;width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:1.4rem;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.lb-btn:hover{background:rgba(244,243,240,.2)}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3}
+.lb-nav.ant{left:16px}.lb-nav.prox{right:16px}
+@media (max-width:620px){.lb-nav.ant{left:8px}.lb-nav.prox{right:8px}.lb-palco img{max-width:96vw}}
+.lb-zoom{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:3;align-items:center}
+.lb-conta{font-size:.82rem;color:#8C8C8E;padding:0 8px}
 
 /* historia */
 .hist{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(36px,5vw,80px);align-items:center}
@@ -310,9 +329,8 @@ footer{padding:64px 0 34px;border-top:1px solid var(--linha);background:#111214}
   .passos{grid-template-columns:repeat(2,1fr);gap:34px 24px}
   .passo::before{display:none}
   .aplic{grid-template-columns:repeat(2,1fr)}
-  .galeria{grid-template-columns:repeat(2,1fr);grid-auto-rows:200px}
+  .galeria{grid-template-columns:repeat(2,1fr);grid-auto-rows:190px}
   .g:nth-child(1){grid-column:span 2;grid-row:span 1}
-  .g:nth-child(6){grid-column:span 2}
   .foot-top{grid-template-columns:1fr 1fr}
 }
 @media (max-width:860px){
@@ -365,13 +383,13 @@ footer{padding:64px 0 34px;border-top:1px solid var(--linha);background:#111214}
   <div class="hero-bg">
     <picture>
       <source media="(max-width:700px)" srcset="img/hero-mobile.jpg">
-      <img src="img/hero.jpg" alt="Cozinha com bancada em granito preto executada pela MarmoMonte" fetchpriority="high" width="1920" height="1280">
+      <img src="img/hero.jpg" alt="Cozinha de alto padrão com bancada em rocha ornamental executada pela MarmoMonte" fetchpriority="high" width="1920" height="1280">
     </picture>
   </div>
   <div class="wrap hero-in">
     <div class="hero-txt">
       <p class="eyebrow">Capão da Canoa · Litoral Norte do RS</p>
-      <h1>A pedra certa, cortada sob medida, instalada por <span class="destaque">uma marmoraria de qualidade.</span></h1>
+      <h1>A pedra certa, cortada sob medida, instalada por <span class="destaque">quem fez seu orçamento</span>.</h1>
       <p class="lead">Rochas ornamentais para cozinhas, áreas gourmet, banheiros, escadas e revestimentos. Da leitura do projeto arquitetônico à instalação final, sem intermediário e sem promessa que não cabe no prazo.</p>
       <div class="hero-acoes">
         <a href="https://wa.me/5551990199620?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20quero%20um%20or%C3%A7amento%20de%20rochas%20ornamentais." class="btn btn-lima" data-cta="hero-whatsapp">
@@ -511,13 +529,20 @@ footer{padding:64px 0 34px;border-top:1px solid var(--linha);background:#111214}
       <h2>O resultado é <span class="italico">o melhor argumento</span>.</h2>
     </div>
     <div class="galeria rv">
-      <div class="g"><img src="img/obra-1.jpg" alt="Obra executada pela MarmoMonte" loading="lazy"></div>
-      <div class="g"><img src="img/obra-2.jpg" alt="Bancada em rocha ornamental" loading="lazy"></div>
-      <div class="g"><img src="img/obra-3.jpg" alt="Detalhe de acabamento em pedra natural" loading="lazy"></div>
-      <div class="g"><img src="img/obra-4.jpg" alt="Ambiente com revestimento em pedra" loading="lazy"></div>
-      <div class="g"><img src="img/obra-5.jpg" alt="Peça instalada pela MarmoMonte" loading="lazy"></div>
-      <div class="g"><img src="img/obra-6.jpg" alt="Projeto em rochas ornamentais" loading="lazy"></div>
+      <button class="g" type="button" data-full="img/obra-1-full.jpg" data-legenda="Escada em pedra natural com hall integrado" aria-label="Ampliar foto: Escada em pedra natural com hall integrado"><img src="img/obra-1.jpg" alt="Escada em pedra natural com hall integrado" loading="lazy"></button>
+      <button class="g" type="button" data-full="img/obra-2-full.jpg" data-legenda="Cozinha com adega e bancada em rocha ornamental" aria-label="Ampliar foto: Cozinha com adega e bancada em rocha ornamental"><img src="img/obra-2.jpg" alt="Cozinha com adega e bancada em rocha ornamental" loading="lazy"></button>
+      <button class="g" type="button" data-full="img/obra-3-full.jpg" data-legenda="Lavabo revestido em mármore com bancada esculpida" aria-label="Ampliar foto: Lavabo revestido em mármore com bancada esculpida"><img src="img/obra-3.jpg" alt="Lavabo revestido em mármore com bancada esculpida" loading="lazy"></button>
+      <button class="g" type="button" data-full="img/obra-4-full.jpg" data-legenda="Ilha de cozinha em mármore com cuba embutida" aria-label="Ampliar foto: Ilha de cozinha em mármore com cuba embutida"><img src="img/obra-4.jpg" alt="Ilha de cozinha em mármore com cuba embutida" loading="lazy"></button>
+      <button class="g" type="button" data-full="img/obra-5-full.jpg" data-legenda="Lavanderia com bancada em pedra natural" aria-label="Ampliar foto: Lavanderia com bancada em pedra natural"><img src="img/obra-5.jpg" alt="Lavanderia com bancada em pedra natural" loading="lazy"></button>
+      <button class="g" type="button" data-full="img/obra-6-full.jpg" data-legenda="Banheiro com revestimento contínuo em pedra" aria-label="Ampliar foto: Banheiro com revestimento contínuo em pedra"><img src="img/obra-6.jpg" alt="Banheiro com revestimento contínuo em pedra" loading="lazy"></button>
+      <button class="g" type="button" data-full="img/obra-7-full.jpg" data-legenda="Mesa externa com tampo em quartzito verde" aria-label="Ampliar foto: Mesa externa com tampo em quartzito verde"><img src="img/obra-7.jpg" alt="Mesa externa com tampo em quartzito verde" loading="lazy"></button>
+      <button class="g" type="button" data-full="img/obra-8-full.jpg" data-legenda="Cozinha com ilha e bancada em pedra clara" aria-label="Ampliar foto: Cozinha com ilha e bancada em pedra clara"><img src="img/obra-8.jpg" alt="Cozinha com ilha e bancada em pedra clara" loading="lazy"></button>
+      <button class="g" type="button" data-full="img/obra-9-full.jpg" data-legenda="Cozinha em madeira com bancada em rocha ornamental" aria-label="Ampliar foto: Cozinha em madeira com bancada em rocha ornamental"><img src="img/obra-9.jpg" alt="Cozinha em madeira com bancada em rocha ornamental" loading="lazy"></button>
+      <button class="g" type="button" data-full="img/obra-10-full.jpg" data-legenda="Banheira revestida em pedra natural" aria-label="Ampliar foto: Banheira revestida em pedra natural"><img src="img/obra-10.jpg" alt="Banheira revestida em pedra natural" loading="lazy"></button>
+      <button class="g" type="button" data-full="img/obra-11-full.jpg" data-legenda="Detalhe de marcenaria com revestimento em pedra" aria-label="Ampliar foto: Detalhe de marcenaria com revestimento em pedra"><img src="img/obra-11.jpg" alt="Detalhe de marcenaria com revestimento em pedra" loading="lazy"></button>
+      <button class="g" type="button" data-full="img/obra-12-full.jpg" data-legenda="Detalhe do veio da pedra em bancada" aria-label="Ampliar foto: Detalhe do veio da pedra em bancada"><img src="img/obra-12.jpg" alt="Detalhe do veio da pedra em bancada" loading="lazy"></button>
     </div>
+      <p class="galeria-nota">Clique em qualquer foto para ampliar e dar zoom no acabamento.</p>
   </div>
 </section>
 
@@ -652,11 +677,27 @@ footer{padding:64px 0 34px;border-top:1px solid var(--linha);background:#111214}
       </div>
     </div>
     <div class="foot-fim">
-      <span>© <span id="ano"></span> MarmoMonte Rochas Ornamentais. Todos os direitos reservados - Site desenvolvido por QH4 Growth</span>
+      <span>© <span id="ano"></span> MarmoMonte Rochas Ornamentais. Todos os direitos reservados.</span>
       <span>Capão da Canoa · Xangri-lá · Capão Novo · Imbé · Tramandaí · Serra Gaúcha · Porto Alegre</span>
     </div>
   </div>
 </footer>
+
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Visualizador de fotos">
+  <div class="lb-topo">
+    <span class="lb-legenda" id="lbLegenda"></span>
+    <button class="lb-btn" id="lbFechar" aria-label="Fechar">&times;</button>
+  </div>
+  <button class="lb-btn lb-nav ant" id="lbAnt" aria-label="Foto anterior">&#8249;</button>
+  <div class="lb-palco" id="lbPalco"><img id="lbImg" src="" alt=""></div>
+  <button class="lb-btn lb-nav prox" id="lbProx" aria-label="Próxima foto">&#8250;</button>
+  <div class="lb-zoom">
+    <button class="lb-btn" id="lbMenos" aria-label="Reduzir zoom">&minus;</button>
+    <span class="lb-conta" id="lbConta"></span>
+    <button class="lb-btn" id="lbMais" aria-label="Aumentar zoom">+</button>
+  </div>
+</div>
 
 <a class="wpp-flut" href="https://wa.me/5551990199620?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20quero%20um%20or%C3%A7amento." aria-label="Falar no WhatsApp" data-cta="flutuante-whatsapp">
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.02a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.17 8.17 0 0 1-1.26-4.35c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.82 2.42a8.17 8.17 0 0 1 2.41 5.82c0 4.54-3.69 8.2-8.23 8.2Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.43.06-.65.31-.22.25-.86.84-.86 2.05s.88 2.38 1 2.54c.12.17 1.73 2.64 4.19 3.7.59.25 1.04.4 1.4.51.59.19 1.12.16 1.55.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
@@ -734,6 +775,87 @@ form.addEventListener('submit', async (e)=>{
     btn.textContent = txt; btn.disabled = false;
   }
 });
+
+
+/* lightbox com zoom */
+(function(){
+  const fotos=[...document.querySelectorAll('.g')];
+  if(!fotos.length) return;
+  const lb=document.getElementById('lb'), palco=document.getElementById('lbPalco'),
+        img=document.getElementById('lbImg'), leg=document.getElementById('lbLegenda'),
+        conta=document.getElementById('lbConta');
+  let atual=0, escala=1, px=0, py=0, arrastando=false, x0=0, y0=0, d0=0;
+
+  function aplicar(){
+    img.style.transform=`translate(${px}px, ${py}px) scale(${escala})`;
+    palco.classList.toggle('zoom', escala>1);
+  }
+  function zoom(v, cx, cy){
+    const ant=escala;
+    escala=Math.min(5, Math.max(1, v));
+    if(escala===1){ px=0; py=0; }
+    else if(cx!==undefined){
+      const r=img.getBoundingClientRect();
+      const ox=cx-(r.left+r.width/2), oy=cy-(r.top+r.height/2);
+      px-=ox*(escala/ant-1); py-=oy*(escala/ant-1);
+    }
+    aplicar();
+  }
+  function mostrar(i){
+    atual=(i+fotos.length)%fotos.length;
+    const b=fotos[atual];
+    img.src=b.dataset.full; img.alt=b.dataset.legenda;
+    leg.textContent=b.dataset.legenda;
+    conta.textContent=`${atual+1} / ${fotos.length}`;
+    escala=1; px=0; py=0; aplicar();
+  }
+  function abrir(i){ mostrar(i); lb.classList.add('on'); document.body.style.overflow='hidden'; }
+  function fechar(){ lb.classList.remove('on'); document.body.style.overflow=''; img.src=''; }
+
+  fotos.forEach((b,i)=>b.addEventListener('click',()=>abrir(i)));
+  document.getElementById('lbFechar').onclick=fechar;
+  document.getElementById('lbAnt').onclick=e=>{e.stopPropagation();mostrar(atual-1)};
+  document.getElementById('lbProx').onclick=e=>{e.stopPropagation();mostrar(atual+1)};
+  document.getElementById('lbMais').onclick=e=>{e.stopPropagation();zoom(escala+.5)};
+  document.getElementById('lbMenos').onclick=e=>{e.stopPropagation();zoom(escala-.5)};
+
+  lb.addEventListener('click',e=>{ if(e.target===lb||e.target===palco) fechar(); });
+  document.addEventListener('keydown',e=>{
+    if(!lb.classList.contains('on')) return;
+    if(e.key==='Escape') fechar();
+    if(e.key==='ArrowRight') mostrar(atual+1);
+    if(e.key==='ArrowLeft') mostrar(atual-1);
+  });
+
+  img.addEventListener('dblclick',e=>{ e.preventDefault(); zoom(escala>1?1:2.5, e.clientX, e.clientY); });
+  img.addEventListener('click',e=>{ e.stopPropagation(); if(escala===1) zoom(2.2, e.clientX, e.clientY); });
+  palco.addEventListener('wheel',e=>{ e.preventDefault(); zoom(escala + (e.deltaY<0?.35:-.35), e.clientX, e.clientY); },{passive:false});
+
+  /* arrastar com mouse */
+  img.addEventListener('pointerdown',e=>{
+    if(escala<=1) return;
+    arrastando=true; palco.classList.add('arrastando');
+    x0=e.clientX-px; y0=e.clientY-py; img.setPointerCapture(e.pointerId);
+  });
+  img.addEventListener('pointermove',e=>{ if(!arrastando) return; px=e.clientX-x0; py=e.clientY-y0; aplicar(); });
+  ['pointerup','pointercancel'].forEach(ev=>img.addEventListener(ev,()=>{arrastando=false;palco.classList.remove('arrastando')}));
+
+  /* pinça no toque */
+  palco.addEventListener('touchstart',e=>{
+    if(e.touches.length===2){
+      d0=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+    }
+  },{passive:true});
+  palco.addEventListener('touchmove',e=>{
+    if(e.touches.length===2 && d0){
+      e.preventDefault();
+      const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+      zoom(escala*(d/d0), (e.touches[0].clientX+e.touches[1].clientX)/2, (e.touches[0].clientY+e.touches[1].clientY)/2);
+      d0=d;
+    }
+  },{passive:false});
+  palco.addEventListener('touchend',()=>{ d0=0; });
+})();
 
 /* eventos de clique nos CTAs */
 document.querySelectorAll('[data-cta]').forEach(el=>{
