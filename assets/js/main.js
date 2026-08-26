@@ -1,5 +1,5 @@
 /* URL do Google Apps Script que recebe o formulário */
-const ENDPOINT_FORM = "https://script.google.com/macros/s/AKfycbwQwp2mQOFJOz8FAoRGjg-SK6FSEy--1AbwVp9UAUPqBfvhToMMeFqIgcFRKdA-dLEU/exec";
+const ENDPOINT_FORM = "COLE_AQUI_A_URL_DO_APPS_SCRIPT";
 
 /* header fixo */
 const cab = document.querySelector('header');
