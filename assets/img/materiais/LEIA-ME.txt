@@ -1,0 +1,9 @@
+Imagens reconstruidas a partir de uma captura de tela da propria LP
+(fonte ~191px de largura, gradiente do card removido e textura
+espelhada para preencher a altura).
+
+Sao fieis ao material original, mas a resolucao e limitada. Assim que
+tiver os arquivos originais da mediateca do WordPress da MarmoMonte,
+substitua mantendo os mesmos nomes:
+  marmore.jpg  granito.jpg  quartzito.jpg  translucido.jpg  laminas.jpg
+Formato ideal: proporcao 3/4, ~600x800, JPG qualidade ~85.
