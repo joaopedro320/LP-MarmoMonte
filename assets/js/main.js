@@ -42,20 +42,7 @@ tel.addEventListener('input', ()=>{
 /* envio do formulário: grava na planilha e abre o WhatsApp com os dados */
 const form = document.getElementById('formOrcamento');
 
-function montarMensagem(d){
-  const l = [
-    'Olá! Vim pela landing page da MarmoMonte e quero um orçamento.',
-    '',
-    'Nome: ' + d.nome,
-    'WhatsApp: ' + d.telefone,
-    'Cidade da obra: ' + d.cidade,
-    'Perfil: ' + d.perfil,
-    'Ambiente: ' + d.ambiente
-  ];
-  if(d.material && d.material !== 'Ainda não sei') l.push('Material de interesse: ' + d.material);
-  if(d.mensagem && d.mensagem.trim()) l.push('Detalhes: ' + d.mensagem.trim());
-  return l.join('\n');
-}
+const MSG_WHATSAPP = 'Olá, vim do google e acabei de preencher o formulario no site!';
 
 form.addEventListener('submit', (e)=>{
   e.preventDefault();
@@ -91,7 +78,7 @@ form.addEventListener('submit', (e)=>{
   window.dataLayer.push({event:'gerar_lead', formulario:'orcamento', ambiente:dados.ambiente, perfil:dados.perfil, material:dados.material || ''});
 
   // 3) redireciona pro WhatsApp com a mensagem pronta
-  const link = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(montarMensagem(dados));
+  const link = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(MSG_WHATSAPP);
   document.getElementById('msgOk').style.display = 'block';
   form.reset();
   btn.textContent = txt; btn.disabled = false;
