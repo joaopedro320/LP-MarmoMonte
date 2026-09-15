@@ -1,8 +1,8 @@
 /* URL do Google Apps Script que recebe o formulário */
-const ENDPOINT_FORM = "COLE_AQUI_A_URL_DO_APPS_SCRIPT";
+const ENDPOINT_FORM = "https://script.google.com/macros/s/AKfycbwQwp2mQOFJOz8FAoRGjg-SK6FSEy--1AbwVp9UAUPqBfvhToMMeFqIgcFRKdA-dLEU/exec";
 
 /* WhatsApp de destino dos leads (só números, com DDI) */
-const WHATSAPP = "5551990199620";
+const WHATSAPP = "555190199620";
 
 /* header fixo */
 const cab = document.querySelector('header');
