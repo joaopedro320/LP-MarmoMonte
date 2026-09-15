@@ -1,5 +1,8 @@
 /* URL do Google Apps Script que recebe o formulário */
-const ENDPOINT_FORM = "COLE_AQUI_A_URL_DO_APPS_SCRIPT";
+const ENDPOINT_FORM = "https://script.google.com/macros/s/AKfycbwQwp2mQOFJOz8FAoRGjg-SK6FSEy--1AbwVp9UAUPqBfvhToMMeFqIgcFRKdA-dLEU/exec";
+
+/* WhatsApp de destino dos leads (só números, com DDI) */
+const WHATSAPP = "5551990199620";
 
 /* header fixo */
 const cab = document.querySelector('header');
@@ -36,16 +39,34 @@ tel.addEventListener('input', ()=>{
   tel.value = v;
 });
 
-/* envio do formulário */
+/* envio do formulário: grava na planilha e abre o WhatsApp com os dados */
 const form = document.getElementById('formOrcamento');
-form.addEventListener('submit', async (e)=>{
+
+function montarMensagem(d){
+  const l = [
+    'Olá! Vim pela landing page da MarmoMonte e quero um orçamento.',
+    '',
+    'Nome: ' + d.nome,
+    'WhatsApp: ' + d.telefone,
+    'Cidade da obra: ' + d.cidade,
+    'Perfil: ' + d.perfil,
+    'Ambiente: ' + d.ambiente
+  ];
+  if(d.material && d.material !== 'Ainda não sei') l.push('Material de interesse: ' + d.material);
+  if(d.mensagem && d.mensagem.trim()) l.push('Detalhes: ' + d.mensagem.trim());
+  return l.join('\n');
+}
+
+form.addEventListener('submit', (e)=>{
   e.preventDefault();
+
   const obrigatorios = ['nome','tel','cidade','perfil','ambiente'];
   for(const id of obrigatorios){
     const c = document.getElementById(id);
     if(!c.value.trim()){ c.focus(); c.style.borderColor = '#E05B5B'; return; }
     c.style.borderColor = '';
   }
+
   const btn = form.querySelector('button[type=submit]');
   const txt = btn.textContent;
   btn.textContent = 'Enviando...'; btn.disabled = true;
@@ -53,21 +74,30 @@ form.addEventListener('submit', async (e)=>{
   const dados = Object.fromEntries(new FormData(form).entries());
   dados.origem = 'LP MarmoMonte';
   dados.data = new Date().toLocaleString('pt-BR');
+  dados.url = window.location.href;
 
-  try{
-    if(ENDPOINT_FORM.startsWith('http')){
-      await fetch(ENDPOINT_FORM, {method:'POST', mode:'no-cors', body: JSON.stringify(dados)});
+  // 1) grava na planilha (sendBeacon sobrevive à navegação para o WhatsApp)
+  if(ENDPOINT_FORM.startsWith('http')){
+    const corpo = new Blob([JSON.stringify(dados)], {type:'text/plain;charset=UTF-8'});
+    let enviado = false;
+    try{ enviado = navigator.sendBeacon(ENDPOINT_FORM, corpo); }catch(err){ enviado = false; }
+    if(!enviado){
+      try{ fetch(ENDPOINT_FORM, {method:'POST', mode:'no-cors', keepalive:true, body: JSON.stringify(dados)}); }catch(err){}
     }
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({event:'gerar_lead', formulario:'orcamento', ambiente:dados.ambiente, perfil:dados.perfil});
-    document.getElementById('msgOk').style.display = 'block';
-    form.reset();
-  }catch(err){
-    document.getElementById('msgOk').textContent = 'Não foi possível enviar agora. Chame no WhatsApp (51) 9 9019-9620.';
-    document.getElementById('msgOk').style.display = 'block';
-  }finally{
-    btn.textContent = txt; btn.disabled = false;
   }
+
+  // 2) evento de conversão
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({event:'gerar_lead', formulario:'orcamento', ambiente:dados.ambiente, perfil:dados.perfil, material:dados.material || ''});
+
+  // 3) redireciona pro WhatsApp com a mensagem pronta
+  const link = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(montarMensagem(dados));
+  document.getElementById('msgOk').style.display = 'block';
+  form.reset();
+  btn.textContent = txt; btn.disabled = false;
+
+  const aba = window.open(link, '_blank');
+  if(!aba) window.location.href = link; // fallback se o popup for bloqueado
 });
 
 

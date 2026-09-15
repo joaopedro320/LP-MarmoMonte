@@ -23,3 +23,18 @@ Deploy: arrastar a pasta no Vercel (estatico, sem build) ou `vercel --prod`.
 - "dolomitos" -> "dolomiticos"
 - Copy dos materiais: "arquiteto indicou ou detalhou um material especifico"
 - Galeria: removidas as fotos 1, 3 e 12; 9 fotos restantes
+
+## Formulário: planilha + redirecionamento para o WhatsApp
+
+Ao enviar, o formulário grava o lead na planilha do Google e abre o WhatsApp da MarmoMonte com a mensagem já preenchida (mesmo padrão da LP da C&K Mármores).
+
+Para ativar:
+
+1. Abra `apps-script.gs`, siga o passo a passo do topo do arquivo e publique o App da Web.
+2. Copie a URL que termina em `/exec`.
+3. Em `assets/js/main.js`, cole a URL em `ENDPOINT_FORM` (linha 2).
+4. O número de destino fica em `WHATSAPP`, logo abaixo (só números, com DDI: `5551990199620`).
+
+Enquanto `ENDPOINT_FORM` estiver com o placeholder, o formulário continua funcionando e abre o WhatsApp normalmente, só não grava na planilha.
+
+A gravação usa `navigator.sendBeacon`, que continua rodando mesmo com o navegador saindo para o WhatsApp. O evento `gerar_lead` continua sendo enviado ao dataLayer antes do redirecionamento.

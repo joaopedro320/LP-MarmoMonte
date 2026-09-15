@@ -213,6 +213,7 @@ section{padding:clamp(72px,9vw,120px) 0;position:relative}
 .campo select option{background:#17181A;color:#F4F3F0}
 .campo textarea{resize:vertical;min-height:96px}
 .linha2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.campo label .opc{font-weight:400;opacity:.6}
 .form-nota{font-size:.82rem;color:var(--grafite-claro);margin-top:14px;line-height:1.5}
 .contatos{display:grid;gap:20px;margin-top:34px}
 .ct{display:flex;gap:16px;align-items:flex-start;padding-top:20px;border-top:1px solid var(--linha)}

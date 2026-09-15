@@ -324,7 +324,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="rv">
         <p class="eyebrow">Solicite seu orçamento</p>
         <h2>Conte o que você precisa <span class="italico">e a gente calcula</span>.</h2>
-        <p class="lead">Responda os campos ao lado ou chame direto no WhatsApp. Quanto mais detalhe você der (ambiente, medidas aproximadas, material pretendido), mais rápido volta o orçamento.</p>
+        <p class="lead">Preencha os campos ao lado e a conversa abre direto no WhatsApp com os seus dados. Quanto mais detalhe você der (ambiente, medidas aproximadas, material pretendido), mais rápido volta o orçamento.</p>
         <div class="contatos">
           <div class="ct"><span class="rot">WhatsApp</span><div><p><a href="https://wa.me/5551990199620?text=Ol%C3%A1%2C%20vim%20pelo%20site%20e%20quero%20um%20or%C3%A7amento." data-cta="contato-whatsapp">(51) 9 9019-9620</a></p></div></div>
           <div class="ct"><span class="rot">E-mail</span><div><p>contato@marmomonte.com.br</p></div></div>
@@ -363,9 +363,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               </select>
             </div>
           </div>
-          <div class="campo"><label for="msg">Detalhes do projeto</label><textarea id="msg" name="mensagem" placeholder="Medidas aproximadas, material pretendido, prazo desejado..."></textarea></div>
-          <button type="submit" class="btn btn-lima" style="width:100%" data-cta="form-enviar">Enviar e receber orçamento</button>
-          <div class="msg-ok" id="msgOk">Recebemos o seu pedido. Retornamos no WhatsApp informado dentro do horário de atendimento.</div>
+          <div class="campo"><label for="material">Material de interesse <span class="opc">(opcional)</span></label>
+            <select id="material" name="material">
+              <option>Ainda não sei</option>
+              <option>Granito</option>
+              <option>Mármore</option>
+              <option>Quartzito</option>
+              <option>Dolomítico</option>
+              <option>Quartzo</option>
+              <option>Lâmina ou ultracompacto</option>
+            </select>
+          </div>
+          <div class="campo"><label for="msg">Detalhes do projeto <span class="opc">(opcional)</span></label><textarea id="msg" name="mensagem" placeholder="Medidas aproximadas, material pretendido, prazo desejado..."></textarea></div>
+          <button type="submit" class="btn btn-lima" style="width:100%" data-cta="form-enviar">Enviar pelo WhatsApp</button>
+          <div class="msg-ok" id="msgOk">Pedido registrado. Estamos abrindo o WhatsApp com os seus dados, é só enviar a mensagem.</div>
           <p class="form-nota">Seus dados são usados apenas para o retorno do orçamento. Prefere resolver agora? <a href="https://wa.me/5551990199620" style="color:var(--lima)" data-cta="form-whatsapp">Chame no WhatsApp</a>.</p>
         </form>
       </div>
