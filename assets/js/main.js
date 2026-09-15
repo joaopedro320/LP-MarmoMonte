@@ -2,7 +2,7 @@
 const ENDPOINT_FORM = "https://script.google.com/macros/s/AKfycbwQwp2mQOFJOz8FAoRGjg-SK6FSEy--1AbwVp9UAUPqBfvhToMMeFqIgcFRKdA-dLEU/exec";
 
 /* WhatsApp de destino dos leads (só números, com DDI) */
-const WHATSAPP = "555190199620";
+const WHATSAPP = "5551990199620";
 
 /* header fixo */
 const cab = document.querySelector('header');
@@ -42,12 +42,7 @@ tel.addEventListener('input', ()=>{
 /* envio do formulário: grava na planilha e abre o WhatsApp com os dados */
 const form = document.getElementById('formOrcamento');
 
-function montarMensagem(d){
-  const l = [
-    'Olá! Vim pelo google e acabei de preencher o formulário no site.',
-  ];
-  return l.join('\n');
-}
+const MSG_WHATSAPP = 'Olá, vim do google e acabei de preencher o formulário no site!';
 
 form.addEventListener('submit', (e)=>{
   e.preventDefault();
@@ -82,14 +77,16 @@ form.addEventListener('submit', (e)=>{
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({event:'gerar_lead', formulario:'orcamento', ambiente:dados.ambiente, perfil:dados.perfil, material:dados.material || ''});
 
-  // 3) redireciona pro WhatsApp com a mensagem pronta
-  const link = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(montarMensagem(dados));
+  // 3) redireciona pro WhatsApp com a mensagem pronta (mesma aba, sem risco de popup bloqueado)
+  const link = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(MSG_WHATSAPP);
   document.getElementById('msgOk').style.display = 'block';
-  form.reset();
-  btn.textContent = txt; btn.disabled = false;
+  btn.textContent = 'Abrindo o WhatsApp...';
 
-  const aba = window.open(link, '_blank');
-  if(!aba) window.location.href = link; // fallback se o popup for bloqueado
+  setTimeout(function(){
+    form.reset();
+    btn.textContent = txt; btn.disabled = false;
+    window.location.href = link;
+  }, 600);
 });
 
 
