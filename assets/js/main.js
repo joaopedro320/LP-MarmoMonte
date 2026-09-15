@@ -42,9 +42,9 @@ tel.addEventListener('input', ()=>{
 /* envio do formulário: grava na planilha e abre o WhatsApp com os dados */
 const form = document.getElementById('formOrcamento');
 
-const MSG_WHATSAPP = 'Olá, vim do google e acabei de preencher o formulário no site!';
+const MSG_WHATSAPP = 'Olá, vim do google e acabei de preencher o formulario no site!';
 
-form.addEventListener('submit', (e)=>{
+form.addEventListener('submit', async (e)=>{
   e.preventDefault();
 
   const obrigatorios = ['nome','tel','cidade','perfil','ambiente'];
@@ -63,13 +63,17 @@ form.addEventListener('submit', (e)=>{
   dados.data = new Date().toLocaleString('pt-BR');
   dados.url = window.location.href;
 
-  // 1) grava na planilha (sendBeacon sobrevive à navegação para o WhatsApp)
+  // 1) grava na planilha e SÓ DEPOIS redireciona
   if(ENDPOINT_FORM.startsWith('http')){
-    const corpo = new Blob([JSON.stringify(dados)], {type:'text/plain;charset=UTF-8'});
-    let enviado = false;
-    try{ enviado = navigator.sendBeacon(ENDPOINT_FORM, corpo); }catch(err){ enviado = false; }
-    if(!enviado){
-      try{ fetch(ENDPOINT_FORM, {method:'POST', mode:'no-cors', keepalive:true, body: JSON.stringify(dados)}); }catch(err){}
+    try{
+      await fetch(ENDPOINT_FORM, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'},
+        body: new URLSearchParams(dados).toString()
+      });
+    }catch(err){
+      console.error('Falha ao gravar o lead:', err);
     }
   }
 
@@ -77,16 +81,12 @@ form.addEventListener('submit', (e)=>{
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({event:'gerar_lead', formulario:'orcamento', ambiente:dados.ambiente, perfil:dados.perfil, material:dados.material || ''});
 
-  // 3) redireciona pro WhatsApp com a mensagem pronta (mesma aba, sem risco de popup bloqueado)
+  // 3) redireciona pro WhatsApp com a mensagem pronta
   const link = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(MSG_WHATSAPP);
   document.getElementById('msgOk').style.display = 'block';
   btn.textContent = 'Abrindo o WhatsApp...';
-
-  setTimeout(function(){
-    form.reset();
-    btn.textContent = txt; btn.disabled = false;
-    window.location.href = link;
-  }, 600);
+  form.reset();
+  window.location.href = link;
 });
 
 

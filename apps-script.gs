@@ -14,7 +14,15 @@ var CABECALHO = ['Data', 'Nome', 'WhatsApp', 'Cidade', 'Perfil', 'Ambiente', 'Ma
 
 function doPost(e) {
   try {
-    var d = JSON.parse(e.postData.contents);
+    var d = {};
+
+    // aceita tanto form-urlencoded (e.parameter) quanto JSON puro
+    if (e && e.parameter && Object.keys(e.parameter).length) {
+      d = e.parameter;
+    } else if (e && e.postData && e.postData.contents) {
+      d = JSON.parse(e.postData.contents);
+    }
+
     var aba = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
 
     if (aba.getLastRow() === 0) {
@@ -41,6 +49,15 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify({ok: false, erro: String(err)}))
       .setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+/** Roda esta função uma vez no editor para testar a gravação sem depender do site. */
+function testarGravacao() {
+  doPost({parameter: {
+    nome: 'Teste Manual', telefone: '(51) 9 0000-0000', cidade: 'Capão da Canoa',
+    perfil: 'Cliente final', ambiente: 'Cozinha ou ilha', material: 'Granito',
+    mensagem: 'linha de teste', origem: 'Teste', url: 'teste'
+  }});
 }
 
 function doGet() {
