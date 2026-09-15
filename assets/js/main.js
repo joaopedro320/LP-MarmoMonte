@@ -77,14 +77,16 @@ form.addEventListener('submit', (e)=>{
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({event:'gerar_lead', formulario:'orcamento', ambiente:dados.ambiente, perfil:dados.perfil, material:dados.material || ''});
 
-  // 3) redireciona pro WhatsApp com a mensagem pronta
+  // 3) redireciona pro WhatsApp com a mensagem pronta (mesma aba, sem risco de popup bloqueado)
   const link = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(MSG_WHATSAPP);
   document.getElementById('msgOk').style.display = 'block';
-  form.reset();
-  btn.textContent = txt; btn.disabled = false;
+  btn.textContent = 'Abrindo o WhatsApp...';
 
-  const aba = window.open(link, '_blank');
-  if(!aba) window.location.href = link; // fallback se o popup for bloqueado
+  setTimeout(function(){
+    form.reset();
+    btn.textContent = txt; btn.disabled = false;
+    window.location.href = link;
+  }, 600);
 });
 
 
