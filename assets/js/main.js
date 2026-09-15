@@ -46,8 +46,6 @@ function montarMensagem(d){
   const l = [
     'Olá! Vim pelo google e acabei de preencher o formulário no site.',
   ];
-  if(d.material && d.material !== 'Ainda não sei') l.push('Material de interesse: ' + d.material);
-  if(d.mensagem && d.mensagem.trim()) l.push('Detalhes: ' + d.mensagem.trim());
   return l.join('\n');
 }
 
