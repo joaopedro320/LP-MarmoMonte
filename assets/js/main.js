@@ -1,5 +1,5 @@
 /* URL do Google Apps Script que recebe o formulário */
-const ENDPOINT_FORM = "https://script.google.com/macros/s/AKfycbwQwp2mQOFJOz8FAoRGjg-SK6FSEy--1AbwVp9UAUPqBfvhToMMeFqIgcFRKdA-dLEU/exec";
+const ENDPOINT_FORM = "COLE_AQUI_A_URL_DO_APPS_SCRIPT";
 
 /* WhatsApp de destino dos leads (só números, com DDI) */
 const WHATSAPP = "5551990199620";
@@ -42,7 +42,20 @@ tel.addEventListener('input', ()=>{
 /* envio do formulário: grava na planilha e abre o WhatsApp com os dados */
 const form = document.getElementById('formOrcamento');
 
-const MSG_WHATSAPP = 'Olá, vim do google e acabei de preencher o formulario no site!';
+function montarMensagem(d){
+  const l = [
+    'Olá! Vim pela landing page da MarmoMonte e quero um orçamento.',
+    '',
+    'Nome: ' + d.nome,
+    'WhatsApp: ' + d.telefone,
+    'Cidade da obra: ' + d.cidade,
+    'Perfil: ' + d.perfil,
+    'Ambiente: ' + d.ambiente
+  ];
+  if(d.material && d.material !== 'Ainda não sei') l.push('Material de interesse: ' + d.material);
+  if(d.mensagem && d.mensagem.trim()) l.push('Detalhes: ' + d.mensagem.trim());
+  return l.join('\n');
+}
 
 form.addEventListener('submit', (e)=>{
   e.preventDefault();
@@ -77,16 +90,14 @@ form.addEventListener('submit', (e)=>{
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({event:'gerar_lead', formulario:'orcamento', ambiente:dados.ambiente, perfil:dados.perfil, material:dados.material || ''});
 
-  // 3) redireciona pro WhatsApp com a mensagem pronta (mesma aba, sem risco de popup bloqueado)
-  const link = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(MSG_WHATSAPP);
+  // 3) redireciona pro WhatsApp com a mensagem pronta
+  const link = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(montarMensagem(dados));
   document.getElementById('msgOk').style.display = 'block';
-  btn.textContent = 'Abrindo o WhatsApp...';
+  form.reset();
+  btn.textContent = txt; btn.disabled = false;
 
-  setTimeout(function(){
-    form.reset();
-    btn.textContent = txt; btn.disabled = false;
-    window.location.href = link;
-  }, 600);
+  const aba = window.open(link, '_blank');
+  if(!aba) window.location.href = link; // fallback se o popup for bloqueado
 });
 
 
