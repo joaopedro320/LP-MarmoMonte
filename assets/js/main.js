@@ -44,13 +44,7 @@ const form = document.getElementById('formOrcamento');
 
 function montarMensagem(d){
   const l = [
-    'Olá! Vim pela landing page da MarmoMonte e quero um orçamento.',
-    '',
-    'Nome: ' + d.nome,
-    'WhatsApp: ' + d.telefone,
-    'Cidade da obra: ' + d.cidade,
-    'Perfil: ' + d.perfil,
-    'Ambiente: ' + d.ambiente
+    'Olá! Vim pelo google e acabei de preencher o formulário no site.',
   ];
   if(d.material && d.material !== 'Ainda não sei') l.push('Material de interesse: ' + d.material);
   if(d.mensagem && d.mensagem.trim()) l.push('Detalhes: ' + d.mensagem.trim());
